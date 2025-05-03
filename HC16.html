@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>何倫碼職業興趣測驗</title>
+
+    <!-- 添加 meta 標籤 -->
+    <meta name="author" content="莊士勇Steven">
+    <meta name="description" content="這是一個何倫碼職業興趣測驗，幫助您了解自己的職業興趣並找到最適合的職業領域。">
+    <meta name="keywords" content="職業興趣測驗, 何倫碼, 職業測評, 興趣測試, 自我探索">
+    <meta property="og:title" content="何倫碼職業興趣測驗">
+    <meta property="og:description" content="測試您的職業興趣，了解您在不同領域的潛力，並找到適合的職業方向。">
+    <meta property="og:image" content="HollandCode_og_image.png">
+    <meta property="og:type" content="website">
+
+  <!-- 載入 Chart.js 圖表庫 -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+/* ----- 整體網頁基本樣式 ----- */
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f4f4f4;
+}
+
+/* ----- 標題樣式 ----- */
+h1 {
+  font-size: 2em;
+  text-align: center;
+  margin: 10px;
+  padding: 10px;
+  background-color: #fff;
+  width: 100%;
+  border-radius: 8px;
+}
+
+/* ----- 圖表容器 ----- */
+#barChart {
+  width: 100%;
+  height: auto;
+  max-width: 600px;
+  margin: 20px auto;
+}
+
+/* ----- 題目區塊樣式 ----- */
+.question-container {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.question {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+}
+
+/* ----- 選項按鈕樣式 ----- */
+.buttons {
+  display: flex;
+  justify-content: center; /* 水平置中 */
+  align-items: center; /* 垂直置中 */
+  gap: 10px;
+}
+
+.buttons button {
+  padding: 12px 25px;
+  font-size: 0.9em;
+  margin: 5px;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.buttons button:hover {
+  opacity: 0.8;
+}
+
+/* 當按鈕獲得焦點時，顯示陰影效果 */
+.buttons button:focus {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+/* 喜歡按鈕 */
+.buttons button:nth-child(1) {
+  background-color: #4CAF50;
+  color: white;
+}
+
+/* 普通按鈕 */
+.buttons button:nth-child(2) {
+  background-color: #FFC107;
+  color: white;
+}
+
+/* 不喜歡按鈕 */
+.buttons button:nth-child(3) {
+  background-color: #FF5722;
+  color: white;
+}
+
+/* 回上一題按鈕 */
+.back-button {
+  background-color: #F44336;
+  color: white;
+  font-size: 0.9em;
+  padding: 10px 20px;
+  border-radius: 6px;
+}
+
+/* ----- 進度條樣式 ----- */
+.progress-bar {
+  width: 100%;
+  background-color: #eee;
+  height: 20px;
+  margin-top: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #4CAF50;
+  text-align: center;
+  color: white;
+  line-height: 20px;
+  font-size: 14px;
+  transition: width 0.5s ease; /* 增加動畫效果 */
+}
+
+/* ----- 結果區塊樣式 ----- */
+.result-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.result-container p {
+  font-size: 1.5em;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 10px; /* 增加一些間距 */
+}
+
+/* 讓結果區塊的字體變大 */
+.result-container h3 {
+  font-size: 1.5em; /* 增大 "你的何倫碼" 標題 */
+}
+
+/* 增大 "你的何倫碼：xxx" 文字 */
+#code {
+  font-size: 2em; /* 增大 "你的何倫碼：xxx" 文字 */
+  font-weight: bold;
+  margin-top: 10px; /* 增加上方間距 */
+}
+
+/* 增大 "Rx Ix Ax Sx Ex Cx" 文字 */
+#score {
+  font-size: 1.5em; /* 增大 "Rx Ix Ax Sx Ex Cx" 文字 */
+  font-weight: normal;
+  margin-top: 20px; /* 增加間距與其他區塊分開 */
+}
+
+
+/* 何倫碼結果回饋訊息 */
+.feedback-container {
+  max-width: 600px;
+  width: 100%;
+  margin: 20px auto;
+  word-wrap: break-word; /* 保證文字換行 */
+  font-size: 1.5em;
+}
+
+
+
+/* 版權信息樣式 */
+#footer {
+  text-align: center;
+  font-size: 1em;
+  color: #777;
+  padding: 20px;
+  background-color: #fff;
+  width: 100%;
+  margin-top: 20px;
+  border-top: 1px solid #ddd;
+}
+
+/* ----- 響應式樣式 (手機版) ----- */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2em;
+  }
+  #barChart {
+    max-width: 100%;
+  }
+  #footer {
+    font-size: 1em;
+    padding: 15px;
+  }
+}
+  </style>
+</head>
+<body>
+
+  <!-- 網頁標題 -->
+  <h1>何倫碼職業興趣測驗</h1>
+
+  <!-- 題目顯示區 -->
+  <div id="question-container" class="question-container"></div>
+
+  <!-- 進度條 -->
+  <div class="progress-bar" id="progress-bar">
+    <div class="progress-fill" id="progress">1/12 (8%)</div>
+  </div>
+
+  <!-- 結果區：圖表、何倫碼、得分 -->
+  <div class="result-container" id="result-container" style="display: none;">
+
+  <h3>你的職業興趣得分</h3>
+
+  <!-- 得分顯示 -->
+  <p id="score"></p>
+
+  <!-- 圖表 -->
+    <canvas id="barChart" width="400" height="400"></canvas>
+
+  <!-- 何倫碼結果 -->
+    <h3>你的何倫碼：<span id="code"></span></h3>
+
+  <!-- 顯示職業建議 -->
+　<div id="career-advice" class="feedback-container"></div>
+
+  </div>
+
+  <!-- 版權信息 -->
+  <div id="footer">
+    &copy; 2025 GCDF全球職涯發展師 莊士勇 設計
+  </div>
+
+  <script>
+    // 題目資料
+    // 活動 18 題
+const questions = [
+  { text: "我喜歡操作機械設備或使用工具從事實作任務", type: "R" },
+  { text: "我喜歡在戶外工作或從事需要體力的工作", type: "R" },
+  { text: "我喜歡動手實驗、探索自然科學現象", type: "I" },
+  { text: "我喜歡閱讀或研究科學知識與理論", type: "I" },
+  { text: "我喜歡從事創作，如寫作、繪畫或設計", type: "A" },
+  { text: "我喜歡表演、攝影或從事藝術性活動", type: "A" },
+  { text: "我喜歡幫助他人或提供社會服務", type: "S" },
+  { text: "我喜歡參與輔導、教學或社區志工活動", type: "S" },
+  { text: "我喜歡說服他人接受我的觀點或建議", type: "E" },
+  { text: "我喜歡規劃活動並帶領團隊執行任務", type: "E" },
+  { text: "我喜歡處理表格、資料與日常行政事務", type: "C" },
+  { text: "我喜歡安排流程、整理資訊與執行例行工作", type: "C" },
+  { text: "我喜歡維修汽車、機械或組裝零件", type: "R" },
+  { text: "我喜歡觀察現象並思考其背後的邏輯", type: "I" },
+  { text: "我喜歡用藝術方式表達我的想法與感受", type: "A" },
+  { text: "我喜歡關心人們的情緒與發展", type: "S" },
+  { text: "我喜歡設定目標並推動團隊前進", type: "E" },
+  { text: "我喜歡依照規則與細節完成工作", type: "C" },
+
+// 能力 18 題
+  { text: "我擅長使用各種工具、機器或設備", type: "R" },
+  { text: "我擅長解決實務問題與排除故障", type: "R" },
+  { text: "我擅長分析數據或提出研究假設", type: "I" },
+  { text: "我擅長理解理論並運用於問題解決", type: "I" },
+  { text: "我擅長創意構思與設計作品", type: "A" },
+  { text: "我擅長寫作、演出或進行藝術創作", type: "A" },
+  { text: "我擅長與人溝通並提供協助", type: "S" },
+  { text: "我擅長傾聽他人需求並給予建議", type: "S" },
+  { text: "我擅長發表意見並影響他人", type: "E" },
+  { text: "我擅長領導計畫並解決衝突", type: "E" },
+  { text: "我擅長整理資料、管理時間與流程", type: "C" },
+  { text: "我擅長處理行政作業與文書管理", type: "C" },
+  { text: "我擅長動手製作或修理物品", type: "R" },
+  { text: "我擅長歸納資訊並找出問題癥結", type: "I" },
+  { text: "我擅長創作圖像、影片或音樂作品", type: "A" },
+  { text: "我擅長解決他人問題並建立信任", type: "S" },
+  { text: "我擅長主導討論並讓團隊達成共識", type: "E" },
+  { text: "我擅長依照標準與規範處理任務", type: "C" },
+
+// 職業 12 題
+{ text: "我對修理機械、操作設備或戶外實作相關的工作有興趣", type: "R" },
+{ text: "我對擔任技術員、工程師或設備維護相關職業有興趣", type: "R" },
+{ text: "我對從事研究、數據分析或科學實驗相關的工作有興趣", type: "I" },
+{ text: "我對當科學家、程式設計師或資料分析師等職業有興趣", type: "I" },
+{ text: "我對藝術創作、設計或表演類型的工作有興趣", type: "A" },
+{ text: "我對成為插畫家、平面設計師或創意寫作工作者有興趣", type: "A" },
+{ text: "我對幫助他人、提供諮詢或教學輔導的工作有興趣", type: "S" },
+{ text: "我對當老師、心理諮商師或社工人員等職業有興趣", type: "S" },
+{ text: "我對領導團隊、銷售產品或推動業務發展的工作有興趣", type: "E" },
+{ text: "我對成為主管、業務經理或創業經營者有興趣", type: "E" },
+{ text: "我對處理資料、執行行政或規劃流程的工作有興趣", type: "C" },
+{ text: "我對當行政人員、會計助理或資料管理人員等職業有興趣", type: "C" },
+
+// 自我評估 6 題
+  { text: "我認為我是一個動手能力強、實作力佳的人", type: "R" },
+  { text: "我認為我擅長分析、思考與解決問題", type: "I" },
+  { text: "我認為我具有藝術感與創意表達能力", type: "A" },
+  { text: "我認為我善於理解與協助他人", type: "S" },
+  { text: "我認為我具備領導、決策與說服能力", type: "E" },
+  { text: "我認為我做事有條理，能專注細節並守秩序", type: "C" }
+];
+
+    // 隨機打亂題目順序
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    shuffleArray(questions);
+
+    // 初始變數
+    let current = 0;
+    const scores = { R: 0, I: 0, A: 0, S: 0, E: 0, C: 0 };
+    let previousAnswers = [];
+
+    // 顯示題目
+    function showQuestion() {
+      const container = document.getElementById('question-container');
+      container.innerHTML = '';
+
+      if (current < questions.length) {
+        const q = questions[current];
+        const div = document.createElement('div');
+        div.className = 'question';
+        div.innerHTML = `
+          <p>${current + 1}. ${q.text}</p>
+          <div class="buttons">
+            <button onclick="answer(2)">喜歡</button>
+            <button onclick="answer(1)">普通</button>
+            <button onclick="answer(0)">不喜歡</button>
+          </div>
+          ${current > 0 ? '<br><button class="back-button" onclick="goBack()">回上一題重做</button>' : ''}
+        `;
+        container.appendChild(div);
+      }
+
+      // 更新進度條（顯示 目前/總題數 + 百分比）
+      const percent = Math.round((current + 1) / questions.length * 100);
+      document.getElementById('progress').style.width = percent + '%';
+      document.getElementById('progress').innerText = `${current + 1}/${questions.length} (${percent}%)`;
+    }
+
+    // 答題後處理
+    function answer(score) {
+      const q = questions[current];
+      scores[q.type] += score;
+      previousAnswers.push({ index: current, score });
+      current++;
+      if (current < questions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    // 回上一題
+    function goBack() {
+      const last = previousAnswers.pop();
+      scores[questions[last.index].type] -= last.score;
+      current = last.index;
+      showQuestion();
+    }
+
+    // 顯示結果
+    function showResult() {
+      document.getElementById('question-container').style.display = 'none';
+      document.getElementById('progress-bar').style.display = 'none';
+      document.getElementById('result-container').style.display = 'block';
+
+      const ctx = document.getElementById('barChart').getContext('2d');
+      const data = {
+        labels: ["實際型 (R)", "研究型 (I)", "藝術型 (A)", "社會型 (S)", "企業型 (E)", "常規型 (C)"],
+        datasets: [{
+          label: '', // 不顯示圖例標籤
+          data: [scores.R, scores.I, scores.A, scores.S, scores.E, scores.C],
+          backgroundColor: [
+            'rgba(255,99,132,0.7)',
+            'rgba(54,162,235,0.7)',
+            'rgba(255,206,86,0.7)',
+            'rgba(75,192,192,0.7)',
+            'rgba(153,102,255,0.7)',
+            'rgba(255,159,64,0.7)'
+          ],
+          borderColor: [
+            'rgba(255,99,132,1)',
+            'rgba(54,162,235,1)',
+            'rgba(255,206,86,1)',
+            'rgba(75,192,192,1)',
+            'rgba(153,102,255,1)',
+            'rgba(255,159,64,1)'
+          ],
+          borderWidth: 1
+        }]
+      };
+
+      new Chart(ctx, {
+        type: 'bar',
+        data: data,
+        options: {
+          responsive: true,
+          indexAxis: 'y',
+          scales: {
+            x: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: '得分',
+                font: { size: 18 }
+              },
+              ticks: {
+                stepSize: 1,
+                font: { size: 14 }
+              }
+            },
+            y: {
+              title: {
+                display: true,
+                text: '職業類型',
+                font: { size: 18 }
+              },
+              ticks: {
+                font: { size: 14 }
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              display: false // 移除圖例（預設粉紅色框框）
+            },
+            tooltip: {
+              titleFont: { size: 16 },
+              bodyFont: { size: 14 }
+            }
+          }
+        }
+      });
+
+
+  // 顯示代碼與分數
+  const codeResult = getCode();
+  document.getElementById('code').innerText = codeResult;
+  document.getElementById('score').innerText =
+    `R${scores.R} I${scores.I} A${scores.A} S${scores.S} E${scores.E} C${scores.C}`;
+
+  // 顯示職業類型建議文字
+  const careerAdvice = getCareerAdvice(codeResult);
+  document.getElementById('career-advice').innerText = careerAdvice;
+}
+
+    // 取得前三名代碼 slice(0, 3)取三碼 slice(0, 2)取兩碼
+    function getCode() {
+      const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+      return sorted.slice(0, 2).map(i => i[0]).join('');
+    }
+
+
+// 根據代碼顯示對應的職業建議文字
+function getCareerAdvice(code) {
+  const advice = {
+    "RI": "【(R)實際型+(I)研究型】。您對研究和創新有高度的興趣，並且具備解決問題的能力。您能夠理解並應用理論知識，並將其轉化為實際可操作的方案。您通常具備分析和規劃的能力，能夠在充滿挑戰和多變的環境中工作，對新事物充滿好奇心。【適合擔任研究員、資訊科技專家、數據分析師、學術研究人員、新產品開發專員、技術創新顧問等職位。】",
+    "IR": "【(I)研究型+(R)實際型】。您對探索與研究未知領域有濃厚興趣，並善於將理論應用到實際情境中。您具備良好的邏輯思維，能夠在實踐中驗證您的假設並提出創新的解決方案。【適合擔任科學研究員、資料科學家、技術顧問、產品經理、創新設計專員等職位。】",
+    "RA": "【(R)實際型+(A)藝術型】。您對實際操作及具體解決問題有強烈的興趣，同時對藝術創作和視覺表達有一定的能力。您喜歡將技術與創意結合，並能在各種情境中發揮創新能力。【適合擔任工業設計師、建築師、產品設計師、廣告創意人員、視覺藝術家等職位。】",
+    "AR": "【(A)藝術型+(R)實際型】。您擁有高度的藝術創意，並能將創意轉化為實際產品或解決方案。您樂於挑戰傳統思維，並善於將藝術概念與實際需求相結合。【適合擔任藝術總監、工業設計師、平面設計師、創意總監等職位。】",
+    "RS": "【(R)實際型+(S)社會型】。您對實際操作及解決問題的工作有高度興趣，並且喜歡與他人協作，幫助他人解決問題。您具備良好的實踐能力，同時關心他人的需求並提供支持。【適合擔任社會工作者、醫療技術員、心理輔導員、教師、非營利組織工作者等職位。】",
+    "SR": "【(S)社會型+(R)實際型】。您喜歡與他人互動並幫助他們，同時也具備實際操作和技術應用的能力。您能夠在實際情境中解決他人問題，並對創造具體價值充滿熱情。【適合擔任護士、醫療助理、社會工作者、教師、職業訓練師等職位。】",
+    "RE": "【(R)實際型+(E)企業型】。您擁有強烈的實際操作能力並且對商業運作有極高的興趣。您善於在具挑戰的環境中制定解決方案，並具備強烈的結果導向和責任感。【適合擔任企業管理者、業務發展專員、項目經理、營運主管等職位。】",
+    "ER": "【(E)企業型+(R)實際型】。您對商業運作和創新有深厚的興趣，並能將理論轉化為具體的行動計劃。您具備創造性問題解決能力，能夠在實際的商業情境中找到突破口。【適合擔任創業者、業務經理、行銷總監、營運主管等職位。】",
+    "RC": "【(R)實際型+(C)傳統型】。您對具體操作和實踐的工作有濃厚興趣，並且能夠按照規範或標準程序執行任務。您注重細節並能確保每個步驟都準確無誤。【適合擔任技術員、行政助理、質量控制員、銀行行員、會計助理等職位。】",
+    "CR": "【(C)傳統型+(R)實際型】。您在遵循規範和流程中表現優異，並且對實際操作的工作充滿興趣。您能夠清晰地解決問題，並確保工作有序進行。【適合擔任檔案管理員、行政助理、銀行行員、法務助理等職位。】",
+    "IA": "【(I)研究型+(A)藝術型】。您喜歡從事與創新、研究和藝術相關的工作，並善於將理論知識與創意結合。您能夠在開創性的環境中發揮創意，並提出獨特的解決方案。【適合擔任研究員、藝術策展人、創意總監、設計師等職位。】",
+    "AI": "【(A)藝術型+(I)研究型】。您在藝術領域具有強烈的創造力，並能在研究過程中尋找新的表現形式。您喜歡將研究結果應用於藝術創作，並探索新的美學可能性。【適合擔任藝術家、藝術治療師、設計師、電影編劇等職位。】",
+    "IS": "【(I)研究型+(S)社會型】。您對研究和探索新知識有強烈興趣，並且喜歡幫助他人。您能夠將學術研究的成果轉化為有益的社會服務。【適合擔任教育工作者、心理學家、社會工作者、職業輔導員等職位。】",
+    "SI": "【(S)社會型+(I)研究型】。您擅長與他人建立聯繫並幫助他們，同時對新知識和研究領域也有高度的興趣。您能將研究成果應用於改善社會環境。【適合擔任心理學家、社會工作者、教育顧問、研究員等職位。】",
+    "IE": "【(I)研究型+(E)企業型】。您對理論和創新有濃厚的興趣，並能將研究成果轉化為商業價值。您擅長將理論應用於市場需求並探索創新商機。【適合擔任市場研究員、產品經理、創新顧問、業務開發專員等職位。】",
+    "EI": "【(E)企業型+(I)研究型】。您擁有強烈的商業思維，並且對研究領域的探索充滿熱情。您擅長將研究轉化為具體的商業方案，推動市場變革。【適合擔任產品開發經理、業務經理、創業顧問、研究主管等職位。】",
+    "IC": "【(I)研究型+(C)傳統型】。您喜歡在規範化環境中進行有系統的研究工作，並且具有良好的分析和邏輯思維能力。您能夠遵循標準流程進行科學實驗和研究。【適合擔任實驗室研究員、數據分析師、學術研究員、技術支持工程師等職位。】",
+    "CI": "【(C)傳統型+(I)研究型】。您擅長按部就班地進行工作並精確處理細節，並對研究和發現新知識有興趣。您能在實驗室環境中運用研究結果，並將其應用於實際操作中。【適合擔任數據分析員、學術研究員、實驗室技術員等職位。】",
+    "AS": "【(A)藝術型+(S)社會型】。您具備豐富的藝術才能並且對與人互動、幫助他人充滿熱情。您能將藝術創作用於治療或教育領域，並在社會服務中發揮作用。【適合擔任藝術治療師、社會工作者、教育藝術工作者等職位。】",
+    "SA": "【(S)社會型+(A)藝術型】。您喜歡與人互動並幫助他人，同時對藝術表達和創作有濃厚的興趣。您能夠將藝術融入到教育、治療或社會工作中。【適合擔任藝術治療師、社會工作者、教育藝術工作者等職位。】",
+    "AE": "【(A)藝術型+(E)企業型】。您具有強烈的藝術創意，並能將其轉化為商業產品或服務。您善於結合藝術和商業，開創新的市場需求。【適合擔任藝術總監、品牌設計師、創業者、文化產業經理等職位。】",
+    "EA": "【(E)企業型+(A)藝術型】。您對商業運作有深入的理解，並能將藝術創意與商業策略結合。您具有開創新市場的能力，並能將藝術創意轉化為商業價值。【適合擔任創意總監、品牌經理、產品設計師、創業者等職位。】",
+    "AC": "【(A)藝術型+(C)傳統型】。您擅長創意發揮並喜歡按照具體的規範進行工作。您能將藝術創作與結構化的工作流程結合，並保證結果的高品質。【適合擔任藝術品保管員、設計師、視覺藝術專業人員等職位。】",
+    "CA": "【(C)傳統型+(A)藝術型】。您能夠在遵循規範的同時，將藝術創作融入其中。您具備組織和細節管理的能力，並能確保每個過程有條不紊地進行。【適合擔任設計助理、藝術策展人、視覺設計師等職位。】",
+    "SE": "【(S)社會型+(E)企業型】。您喜歡與他人互動並幫助他們，同時也具備商業頭腦。您能夠在社會服務的同時創造商業價值，並推動社會變革。【適合擔任非營利組織管理者、社會企業創辦人、公共事務經理等職位。】",
+    "ES": "【(E)企業型+(S)社會型】。您具有商業運作的敏銳眼光，並且關心他人的需求。您能夠在商業環境中創造價值，同時也能滿足社會需求。【適合擔任企業社會責任經理、人力資源經理、社會服務經理等職位。】",
+    "EC": "【(E)企業型+(C)傳統型】。您具備商業運作能力，並能夠依照標準流程執行工作。您注重高效、準確，並能將工作規範化，確保工作達到最高標準。【適合擔任業務經理、項目經理、銀行職員等職位。】",
+    "CE": "【(C)傳統型+(E)企業型】。您能夠高效地處理事務並遵循規範，同時具備商業運作的知識和能力。您適合在結構化的商業環境中發揮作用。【適合擔任項目經理、行政經理、財務主管等職位。】",
+    "SC": "【(S)社會型+(C)傳統型】。您擅長與他人建立聯繫並幫助他人，同時能夠處理細節並遵循流程。您能在結構化環境中發揮所長，提供支持並解決問題。【適合擔任醫療服務協調員、社會工作助理、行政支持等職位。】",
+    "CS": "【(C)傳統型+(S)社會型】。您具備組織與細節管理能力，並喜歡與他人互動，幫助他們解決問題。您能在結構化環境中提供協助並保證流程順利運行。【適合擔任行政助理、人力資源專員、社會服務助理等職位。】"
+  };
+
+  return advice[code] || "無相關職涯建議";
+}
+
+    // 初始顯示第一題
+    showQuestion();
+  </script>
+
+</body>
+</html>
