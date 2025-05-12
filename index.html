@@ -5,14 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>何倫碼職業興趣測驗</title>
 
-    <!-- 添加 meta 標籤 -->
-    <meta name="author" content="莊士勇Steven">
-    <meta name="description" content="這是一個何倫碼職業興趣測驗，幫助您了解自己的職業興趣並找到最適合的職業領域。">
-    <meta name="keywords" content="職業興趣測驗, 何倫碼, 職業測評, 興趣測試, 自我探索">
-    <meta property="og:title" content="何倫碼職業興趣測驗">
-    <meta property="og:description" content="測試您的職業興趣，了解您在不同領域的潛力，並找到適合的職業方向。">
-    <meta property="og:image" content="HollandCode_og_image.png">
-    <meta property="og:type" content="website">
+  <!-- 基本資訊 -->
+  <meta name="version" content="2.0">
+  <meta name="author" content="莊士勇Steven">
+  <meta name="description" content="本測驗依據 John L. Holland 博士提出的 SDS 架構設計，並由莊士勇 Steven 本土化調整，幫助您了解職業興趣與潛力，找到最適合的職涯方向。">
+  <meta name="keywords" content="職業興趣測驗, 何倫碼, 職業測評, 興趣測試, 自我探索">
+
+  <!-- 社群分享設定 -->
+  <meta property="og:title" content="何倫碼職業興趣測驗">
+  <meta property="og:description" content="測試您的職業興趣，了解您在不同領域的潛力，並找到適合的職業方向。">
+  <meta property="og:image" content="HollandCode_og_image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:updated_time" content="2025-05-12T00:00:00Z">
+
+  <!-- 釋出日期 -->
+  <meta property="article:published_time" content="2025-05-04T00:00:00Z">
+  <meta property="article:modified_time" content="2025-05-12T00:00:00Z">
 
   <!-- 載入 Chart.js 圖表庫 -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -251,7 +259,7 @@ h1 {
 
   <!-- 進度條 -->
   <div class="progress-bar" id="progress-bar">
-    <div class="progress-fill" id="progress">1/48 (0%)</div>
+    <div class="progress-fill" id="progress">1/60 (0%)</div>
   </div>
 
 <!-- 結果區：圖表、何倫碼、得分 -->
@@ -284,64 +292,84 @@ h1 {
 
   <!-- 版權信息 -->
   <div id="footer">
-    &copy; 2025 GCDF全球職涯發展師 莊士勇 設計
+    本測驗依據Holland六型人格理論與SDS架構設計，<BR>並由莊士勇諮詢師依現代職場情境重新設計。<BR>&copy; 2025 GCDF全球職涯發展師 莊士勇 設計
   </div>
 
   <script>
     // 何倫碼測驗題目資料
-    // 活動 18 題
+    // SDS簡化版60題
 const questions = [
-  { text: "我喜歡操作機械設備或使用工具從事實作任務", type: "R" },
-  { text: "我喜歡在戶外工作或從事需要體力的工作", type: "R" },
-  { text: "我喜歡動手實驗、探索自然科學現象", type: "I" },
-  { text: "我喜歡閱讀或研究科學知識與理論", type: "I" },
-  { text: "我喜歡從事創作，如寫作、繪畫或設計", type: "A" },
-  { text: "我喜歡表演、攝影或從事藝術性活動", type: "A" },
-  { text: "我喜歡幫助他人或提供社會服務", type: "S" },
-  { text: "我喜歡參與輔導、教學或社區志工活動", type: "S" },
-  { text: "我喜歡說服他人接受我的觀點或建議", type: "E" },
-  { text: "我喜歡規劃活動並帶領團隊執行任務", type: "E" },
-  { text: "我喜歡處理表格、資料與日常行政事務", type: "C" },
-  { text: "我喜歡安排流程、整理資訊與執行例行工作", type: "C" },
-  { text: "我喜歡維修汽車、機械或組裝零件", type: "R" },
-  { text: "我喜歡觀察現象並思考其背後的邏輯", type: "I" },
-  { text: "我喜歡用藝術方式表達我的想法與感受", type: "A" },
-  { text: "我喜歡關心人們的情緒與發展", type: "S" },
-  { text: "我喜歡設定目標並推動團隊前進", type: "E" },
-  { text: "我喜歡依照規則與細節完成工作", type: "C" },
-// 能力 18 題
-  { text: "我擅長使用各種工具、機器或設備", type: "R" },
-  { text: "我擅長解決實務問題與排除故障", type: "R" },
-  { text: "我擅長分析數據或提出研究假設", type: "I" },
-  { text: "我擅長理解理論並運用於問題解決", type: "I" },
-  { text: "我擅長創意構思與設計作品", type: "A" },
-  { text: "我擅長寫作、演出或進行藝術創作", type: "A" },
-  { text: "我擅長與人溝通並提供協助", type: "S" },
-  { text: "我擅長傾聽他人需求並給予建議", type: "S" },
-  { text: "我擅長發表意見並影響他人", type: "E" },
-  { text: "我擅長領導計畫並解決衝突", type: "E" },
-  { text: "我擅長整理資料、管理時間與流程", type: "C" },
-  { text: "我擅長處理行政作業與文書管理", type: "C" },
-  { text: "我擅長動手製作或修理物品", type: "R" },
-  { text: "我擅長歸納資訊並找出問題癥結", type: "I" },
-  { text: "我擅長創作圖像、影片或音樂作品", type: "A" },
-  { text: "我擅長解決他人問題並建立信任", type: "S" },
-  { text: "我擅長主導討論並讓團隊達成共識", type: "E" },
-  { text: "我擅長依照標準與規範處理任務", type: "C" },
-// 職業 12 題
-  { text: "我對修理機械、操作設備或戶外實作相關的工作有興趣，例如技術員、工程師或設備維護相關職業", type: "R" },
-  { text: "我對從事研究、數據分析或科學實驗等工作有興趣，例如科學家、程式設計師或資料分析師", type: "I" },
-  { text: "我對藝術創作、設計或表演類型的工作有興趣，例如插畫家、平面設計師或創意寫作工作者", type: "A" },
-  { text: "我對幫助他人、提供諮詢或教學輔導的工作有興趣，例如老師、心理諮商師或社工人員", type: "S" },
-  { text: "我對領導團隊、銷售產品或推動業務發展的工作有興趣，例如主管、業務經理或創業經營者", type: "E" },
-  { text: "我對處理資料、執行行政或規劃流程的工作有興趣，例如行政人員、會計助理或資料管理人員", type: "C" },
-// 自我評估 6 題
-  { text: "我認為我是一個動手能力強、實作力佳的人", type: "R" },
-  { text: "我認為我擅長分析、思考與解決問題", type: "I" },
-  { text: "我認為我具有藝術感與創意表達能力", type: "A" },
-  { text: "我認為我善於理解與協助他人", type: "S" },
-  { text: "我認為我具備領導、決策與說服能力", type: "E" },
-  { text: "我認為我做事有條理，能專注細節並守秩序", type: "C" }
+  // Realistic（R）實作型— 動手操作、戶外活動、工具與機械
+  { text: "修理手機、電器或簡單家電", type: "R" },
+  { text: "使用電動工具進行DIY或居家修繕", type: "R" },
+  { text: "組裝傢俱或機械模型", type: "R" },
+  { text: "駕駛汽機車或操作交通工具進行任務", type: "R" },
+  { text: "使用園藝工具種植植物或整理陽台花園", type: "R" },
+  { text: "操作3C設備或簡易機械進行日常維護", type: "R" },
+  { text: "參與戶外活動如露營、搭帳棚或野炊", type: "R" },
+  { text: "協助搬運大型物品或整理儲藏空間", type: "R" },
+  { text: "動手改裝或升級電腦、主機設備", type: "R" },
+  { text: "參與裝潢或空間佈置的實作工作", type: "R" },
+
+  // Investigative（I）研究型— 分析、理解、探索、理論思考
+  { text: "解數學題或邏輯推理題", type: "I" },
+  { text: "設計或操作科學實驗", type: "I" },
+  { text: "研究動物、植物或自然現象", type: "I" },
+  { text: "搜集數據並進行資料分析", type: "I" },
+  { text: "閱讀有關科技、科普或醫學的文章", type: "I" },
+  { text: "撰寫程式或設計網站/小工具", type: "I" },
+  { text: "觀察現象並思考可能的原因與解釋", type: "I" },
+  { text: "查閱醫學、心理學或健康知識", type: "I" },
+  { text: "探討社會議題背後的系統與結構", type: "I" },
+  { text: "分析產品或市場背後的機制與邏輯", type: "I" },
+
+  // Artistic（A）藝術型— 創意、表達、設計、美感、故事
+  { text: "繪畫、插畫或平面設計創作", type: "A" },
+  { text: "撰寫文章、劇本、小說或個人心得", type: "A" },
+  { text: "創作音樂或混音音效", type: "A" },
+  { text: "拍攝短影音或紀錄生活素材", type: "A" },
+  { text: "舞蹈、表演或拍攝演出片段", type: "A" },
+  { text: "設計IG貼文、海報或名片", type: "A" },
+  { text: "剪輯影片或操作影像處理軟體", type: "A" },
+  { text: "規劃展覽、空間佈置或舞台設計", type: "A" },
+  { text: "創作文案、標語或創業提案簡報", type: "A" },
+  { text: "利用社群平台分享生活觀點與創意內容", type: "A" },
+
+  // Social（S）社會型— 幫助、教導、溝通、合作
+  { text: "協助朋友解決煩惱或情緒問題", type: "S" },
+  { text: "與他人討論生活或職涯困惑", type: "S" },
+  { text: "參與志工、公益或社區活動", type: "S" },
+  { text: "教導或輔導他人學習技能或課程", type: "S" },
+  { text: "關心年長者、小孩或身心障礙者", type: "S" },
+  { text: "擔任活動主持人或引導者", type: "S" },
+  { text: "組織班級、社團或群組活動", type: "S" },
+  { text: "安排聚會、課程或線上分享會", type: "S" },
+  { text: "傾聽他人訴苦並給予實際建議", type: "S" },
+  { text: "協助團隊達成共同任務或專案", type: "S" },
+
+  // Enterprising（E）企業型— 領導、說服、企劃、談判、創業
+  { text: "主持或發表簡報、提案簡介", type: "E" },
+  { text: "推銷商品、想法或活動計畫", type: "E" },
+  { text: "說服他人接受你的觀點或決策", type: "E" },
+  { text: "經營社群平台、網路商店或接案工作", type: "E" },
+  { text: "帶領小組討論、制定團隊目標", type: "E" },
+  { text: "安排行程、分配任務或資源", type: "E" },
+  { text: "擴展人脈、參與社交場合或交流活動", type: "E" },
+  { text: "擬定行銷、企劃或策略方案", type: "E" },
+  { text: "協商合作條件或議價爭取資源", type: "E" },
+  { text: "願意承擔風險並嘗試創業行動", type: "E" },
+
+  // Conventional（C）事務型— 系統化、重視規則、流程、管理
+  { text: "整理資料、記帳或輸入表單資訊", type: "C" },
+  { text: "規劃時間表、行程或任務分配表", type: "C" },
+  { text: "編排財務收支或個人預算記錄", type: "C" },
+  { text: "製作會議紀錄、報表或流程圖", type: "C" },
+  { text: "整理文書、檔案或雲端資料夾", type: "C" },
+  { text: "分類、命名、歸檔工作資料", type: "C" },
+  { text: "處理報名表、訂單或客戶資料", type: "C" },
+  { text: "核對數字或檢查表單是否正確", type: "C" },
+  { text: "遵照SOP或系統操作指示完成任務", type: "C" },
+  { text: "在有制度與清楚規則的環境中工作", type: "C" }
 ];
 
     // 隨機打亂題目順序
@@ -371,9 +399,9 @@ const questions = [
         div.innerHTML = `
           <p>${current + 1}. ${q.text}</p>
           <div class="buttons">
-            <button onclick="answer(2)">是</button>
+            <button onclick="answer(2)">喜歡</button>
             <button onclick="answer(1)">還好</button>
-            <button onclick="answer(0)">不是</button>
+            <button onclick="answer(0)">不喜歡</button>
           </div>
           ${current > 0 ? '<br><button class="back-button" onclick="goBack()">回上一題重做</button>' : ''}
         `;
