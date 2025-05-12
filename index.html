@@ -206,6 +206,14 @@ h1 {
   text-align: left; /* 確保文字靠左顯示 */
 }
 
+/* 完成測驗時間文字樣式 */
+#complete-time {
+  margin-top: 1em;         /* 與上方元素間隔一點距離 */
+  color: #007BFF;          /* 使用亮藍色（Bootstrap 標準藍），清晰又有活力 */
+  font-size: 16px;         /* 設定文字大小為 16px，適合輔助資訊顯示 */
+}
+
+
 /* 版權信息樣式 */
 #footer {
   text-align: center;
@@ -263,6 +271,9 @@ h1 {
     <!-- 職業建議說明 -->
     <p id="career-suggestions"></p>
   </div>
+
+<div id="complete-time">完成時間：</div>
+
 </div>
 
 
@@ -517,6 +528,17 @@ document.getElementById('career-suggestions').innerText = careerSuggestions;
       const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
       return sorted.slice(0, 2).map(i => i[0]).join('');
     }
+
+
+// 取得目前的日期和時間(開始)
+const now = new Date();
+const dateString = now.toLocaleDateString();  // 將日期格式化為字串，例如：2025/5/12
+const timeString = now.toLocaleTimeString();  // 將時間格式化為字串，例如：14:32:18
+
+ // 顯示完成時間到網頁上的元素（ID 為 complete-time）
+document.getElementById('complete-time').innerHTML = `完成時間：${dateString} ${timeString}<br>請截圖本頁面，請莊老師為您解讀喔`;
+
+// 取得目前的日期和時間(結束)
 
 
 // 根據代碼顯示對應的描述
